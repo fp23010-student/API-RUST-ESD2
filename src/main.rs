@@ -1,38 +1,32 @@
-mod service;
-mod utils;
-mod models;
-mod controller;
+use axum::{
+    routing::get,
+    Router,
+};
+use controller::carrera_controller;
+
 mod config;
+mod models;
 mod repository;
-
-//cambiar por los controllers que tengas
-use controller::pais_controller::pais_router;
-use controller::persona_controller::persona_router;
-
-use config::config::crear_pool;
+mod service;
+mod controller;
 
 #[tokio::main]
 async fn main() {
-    let direccion = "127.0.0.1:3000";
-    let listener = tokio::net::TcpListener::bind(direccion)
+    let pool = config::config::crear_pool()
         .await
-        .expect("No se pudo enlazar el puerto 3000");
+        .expect("Error al crear el pool de conexiones");
 
-    println!("Servidor escuchando en http://{direccion}");
+    let app = Router::new()
+        .route("/carreras", get(carrera_controller::get_all).post(carrera_controller::create))
+        .route("/carreras/{id}", get(carrera_controller::get_by_id)
+                                .put(carrera_controller::update)
+                                .delete(carrera_controller::delete))
+        .with_state(pool);
 
-    let pool = crear_pool()
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
         .await
-        .expect("No se pudo conectar a la base de datos");
+        .unwrap();
 
-    axum::serve(listener, unificar_routers(pool))
-        .await
-        .expect("Error al iniciar el servidor");
-}
-
-
-
-fn unificar_routers(pool: sqlx::PgPool) -> axum::Router {
-    let mut router1 = pais_router(pool.clone());
-    let router2 = persona_router(pool.clone());
-    router1.merge(router2)
+    println!("Servidor corriendo en http://127.0.0.1:8080");
+    axum::serve(listener, app).await.unwrap();
 }
