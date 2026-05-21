@@ -3,6 +3,7 @@ use axum::{
     Router,
 };
 use controller::carrera_controller;
+use controller::profesor_controller;
 
 mod config;
 mod models;
