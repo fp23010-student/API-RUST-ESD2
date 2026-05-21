@@ -16,7 +16,6 @@ CREATE TABLE Estudiantes (
 CREATE TABLE profesores (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
     correo VARCHAR(150) UNIQUE NOT NULL,
     especialidad VARCHAR(100) NOT NULL
 );
