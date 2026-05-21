@@ -5,7 +5,6 @@ use sqlx::FromRow;
 pub struct Profesor {
     pub id: i32,
     pub nombre: String,
-    pub apellido: String,
     pub correo: String,
     pub especialidad: String,
 }
