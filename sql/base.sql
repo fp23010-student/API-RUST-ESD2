@@ -13,11 +13,12 @@ CREATE TABLE Estudiantes (
     id_carrera INT REFERENCES Carreras(id_carrera)
 );
 
-CREATE TABLE Profesores (
-    id_profesor SERIAL PRIMARY KEY,
+CREATE TABLE profesores (
+    id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    especialidad VARCHAR(100),
-    correo VARCHAR(100) UNIQUE
+    apellido VARCHAR(100) NOT NULL,
+    correo VARCHAR(150) UNIQUE NOT NULL,
+    especialidad VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE Materias (
