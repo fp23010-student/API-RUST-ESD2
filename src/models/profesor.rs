@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
+use sqlx::FromRow;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Profesor {
-    pub id: Option<i32>,
+    pub id: i32,
     pub nombre: String,
     pub apellido: String,
     pub correo: String,
