@@ -22,7 +22,18 @@ async fn main() {
         .route("/carreras/{id}", get(carrera_controller::get_by_id)
                                 .put(carrera_controller::update)
                                 .delete(carrera_controller::delete))
-        .route("/profesores", get(profesor_controller::get_profesores))
+        .route(
+            "/profesores",
+            get(profesor_controller::get_profesores)
+                .post(profesor_controller::crear_profesor)
+        )
+
+        .route(
+            "/profesores/{id}",
+            get(profesor_controller::get_profesor_por_id)
+                .put(profesor_controller::actualizar_profesor)
+                .delete(profesor_controller::eliminar_profesor)
+        )
         .with_state(pool);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
