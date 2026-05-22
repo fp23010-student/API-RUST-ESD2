@@ -3,15 +3,15 @@ use sqlx::FromRow;
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct Profesor {
-    pub id: i32,
+    pub id_profesor: i32,
     pub nombre: String,
-    pub correo: String,
     pub especialidad: String,
+    pub correo: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CreateProfesor {
     pub nombre: String,
-    pub correo: String,
     pub especialidad: String,
+    pub correo: String,
 }

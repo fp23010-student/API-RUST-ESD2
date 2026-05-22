@@ -5,18 +5,15 @@ pub async fn obtener_profesores(
     pool: &PgPool,
 ) -> Result<Vec<Profesor>, sqlx::Error> {
     sqlx::query_as::<_, Profesor>(
-        "SELECT id, nombre, correo, especialidad FROM profesores"
+        "SELECT id_profesor, nombre, especialidad, correo FROM profesores"
     )
     .fetch_all(pool)
     .await
 }
 
-pub async fn obtener_profesor_por_id(
-    pool: &PgPool,
-    id: i32,
-) -> Result<Option<Profesor>, sqlx::Error> {
+pub async fn obtener_profesor_por_id(pool: &PgPool,   id: i32,)-> Result<Option<Profesor>, sqlx::Error> {
     sqlx::query_as::<_, Profesor>(
-        "SELECT id, nombre, correo, especialidad FROM profesores WHERE id = $1"
+        "SELECT id_profesor, nombre, especialidad, correo FROM profesores WHERE id_profesor = $1"
     )
     .bind(id)
     .fetch_optional(pool)
@@ -29,14 +26,14 @@ pub async fn crear_profesor(
 ) -> Result<Profesor, sqlx::Error> {
     sqlx::query_as::<_, Profesor>(
         r#"
-        INSERT INTO profesores (nombre, correo, especialidad)
+        INSERT INTO profesores (nombre, especialidad, correo)
         VALUES ($1, $2, $3)
-        RETURNING id, nombre, correo, especialidad
+        RETURNING id_profesor, nombre, especialidad, correo
         "#
     )
     .bind(&input.nombre)
-    .bind(&input.correo)
     .bind(&input.especialidad)
+    .bind(&input.correo)
     .fetch_one(pool)
     .await
 }
@@ -49,14 +46,14 @@ pub async fn actualizar_profesor(
     sqlx::query_as::<_, Profesor>(
         r#"
         UPDATE profesores 
-        SET nombre = $1, correo = $2, especialidad = $3
-        WHERE id = $4
-        RETURNING id, nombre, correo, especialidad
+        SET nombre = $1, especialidad = $2, correo = $3
+        WHERE id_profesor = $4
+        RETURNING id_profesor, nombre, especialidad, correo
         "#
     )
     .bind(&input.nombre)
-    .bind(&input.correo)
     .bind(&input.especialidad)
+    .bind(&input.correo)
     .bind(id)
     .fetch_optional(pool)
     .await
@@ -67,7 +64,7 @@ pub async fn eliminar_profesor(
     id: i32,
 ) -> Result<u64, sqlx::Error> {
     let result = sqlx::query(
-        "DELETE FROM profesores WHERE id = $1"
+        "DELETE FROM profesores WHERE id_profesor = $1"
     )
     .bind(id)
     .execute(pool)
