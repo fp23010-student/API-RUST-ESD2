@@ -4,6 +4,8 @@ use axum::{
 };
 use controller::carrera_controller;
 use controller::profesor_controller;
+use controller::materia_controller;
+
 
 mod config;
 mod models;
@@ -28,6 +30,10 @@ async fn main() {
             .put(profesor_controller::update)
             .delete(profesor_controller::delete)
             )
+        .route("/materias", get(materia_controller::get_all).post(materia_controller::create))
+        .route("/materias/{id}", get(materia_controller::get_by_id)
+                        .put(materia_controller::update)
+                        .delete(materia_controller::delete))
         .with_state(pool);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
